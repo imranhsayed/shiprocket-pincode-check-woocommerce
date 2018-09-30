@@ -13,6 +13,7 @@ class SPCW_Generate_Token {
 	 */
 	public function __construct() {
 		register_activation_hook( SPCW_PLUGIN_PATH, array( $this, 'spcw_schedule_event_for_token_generation' ) );
+		add_action( 'spcw_generate_shiprocket_token_daily', array ( $this, 'regenerate_shiprocket_token' ) );
 	}
 
 	function spcw_schedule_event_for_token_generation() {
@@ -30,5 +31,28 @@ class SPCW_Generate_Token {
 			wp_schedule_event( $cron_time, 'daily', 'spcw_generate_shiprocket_token_daily' );
 
 		}
+	}
+
+	private function regenerate_shiprocket_token() {
+
+		$url = 'https://apiv2.shiprocket.in/v1/external/auth/login';
+		$headers = [ ];
+		$body = [ ];
+
+		array_push( $headers, 'Accept: application/json' );
+		array_push( $headers, 'Content-Type: application/json' );
+
+		$response = wp_remote_post( $url, array(
+				'method' => 'POST',
+				'timeout' => 30,
+				'redirection' => 10,
+				'httpversion' => '1.1',
+				'blocking' => true,
+				'headers' => $headers,
+				'body' => $body,
+				'cookies' => array()
+			)
+		);
+		
 	}
 }
