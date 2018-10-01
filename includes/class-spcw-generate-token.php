@@ -35,12 +35,15 @@ class SPCW_Generate_Token {
 
 	private function regenerate_shiprocket_token() {
 
-		$url = 'https://apiv2.shiprocket.in/v1/external/auth/login';
-		$headers = [ ];
-		$body = [ ];
+		$url 		= 'https://apiv2.shiprocket.in/v1/external/auth/login';
+		$headers 	= array();
+		$body 		= array();
 
-		array_push( $headers, 'Accept: application/json' );
-		array_push( $headers, 'Content-Type: application/json' );
+		$headers['Accept'] 			= 'application/json';
+		$headers['Content-Type'] 	= 'application/json';
+
+		$body['email'] 		= 'hi@mail.com';
+		$body['password'] 	= 'myPassword123';
 
 		$response = wp_remote_post( $url, array(
 				'method' => 'POST',
@@ -53,6 +56,12 @@ class SPCW_Generate_Token {
 				'cookies' => array()
 			)
 		);
+
+		if ( is_wp_error( $response ) ) {
+			// Do something here...
+		} else {
+			// Do something here...
+		}
 		
 	}
 }
